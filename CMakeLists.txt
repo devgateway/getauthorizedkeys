@@ -4,8 +4,10 @@ project(getauthorizedkey C)
 
 set(SBINDIR /usr/sbin CACHE PATH "Privileged user binary path")
 
+add_subdirectory(ldapescape)
+
 add_executable(getauthorizedkey getauthorizedkey.c)
-target_link_libraries(ldap)
+target_link_libraries(ldap ldapescape)
 
 install(TARGETS getauthorizedkey
 	RUNTIME DESTINATION "${SBINDIR}")

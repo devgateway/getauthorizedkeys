@@ -10,6 +10,8 @@ typedef struct {
 	int version;
 } config;
 
+extern char *ldap_escape_filter(const char *string);
+
 int getpubkey(char *uri, config *cfg, char **key) {
 	int rc;
 	LDAP *ldap = NULL;
@@ -39,11 +41,22 @@ int getpubkey(char *uri, config *cfg, char **key) {
 
 int main(int argc, const char *argv[]) {
 	config cfg;
+	char *username;
 
 	openlog(NULL, 0, LOG_AUTH);
+
+	if (argc == 2) {
+		username = ldap_escape_filter(argv[1]);
+	} else {
+		syslog(LOG_CRIT, "Expected 1 argument, got %i", argc);
+		return FAIL;
+	}
 
 	cfg.binddn = NULL;
 	cfg.cred.bv_val = NULL;
 	cfg.cred.bv_len = 0;
 	cfg.version = LDAP_VERSION3;
+
+end:
+	free(username);
 }
