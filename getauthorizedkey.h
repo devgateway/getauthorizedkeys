@@ -25,3 +25,4 @@ extern char *ldap_escape_filter(const char *string);
 
 int get_pub_key(const char *username, config *cfg, char **keys);
 int read_config();
+int get_pub_keys(const char *raw_username, char **keys);
