@@ -1,3 +1,6 @@
 [submodule "ldapescape"]
 	path = ldapescape
 	url = https://github.com/devgateway/ldapescape.git
+[submodule "inih"]
+	path = inih
+	url = https://github.com/benhoyt/inih.git
