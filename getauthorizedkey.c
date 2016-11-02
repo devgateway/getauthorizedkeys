@@ -1,47 +1,83 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include <ldap.h>
 #include <syslog.h>
+#include <errno.h>
 
-#define SUCCESS 0
-#define FAIL 1
+#include "getauthorizedkey.h"
 
-typedef struct {
-	char *binddn;
-	struct berval cred;
-	int version;
-} config;
+static inline LDAP *ldap_connect();
 
-extern char *ldap_escape_filter(const char *string);
+extern char *cfg[];
 
-int getpubkey(char *uri, config *cfg, char **key) {
+int get_pub_keys(const char *raw_username, char **keys) {
+	LDAP *ldap;
+	char *username = NULL, *filter = NULL;
+
+	username = ldap_escape_filter(raw_username);
+	if (!username) {
+		syslog(LOG_CRIT, "Unable to read config");
+		return -1;
+	}
+
+	n = asprintf(&filter, cfg[CFG_USR_FILT], username);
+	if (n == -1) {
+		filter = NULL;
+		result = -1;
+		goto end;
+	}
+
+	ldap = ldap_connect();
+	if (!ldap) return -1;
+
+end:
+	free(username);
+	if (filter) free(filter);
+	return result;
+}
+
+/* Connect and bind to LDAP.
+Returns: LDAP handle or NULL */
+static inline LDAP *ldap_connect() {
 	int rc;
 	LDAP *ldap = NULL;
+	struct berval cred;
+	const int version3 = LDAP_VERSION3;
+	char *binddn;
 
 	/* allocate LDAP structure */
-	rc = ldap_initialize(&ldap, uri);
+	rc = ldap_initialize(&ldap, cfg[CFG_LDAP_URI]);
 	if (rc != LDAP_SUCCESS) {
 		syslog(LOG_ERR, "Unable to initialize LDAP library: %s", strerror(errno));
-		return FAIL;
+		return NULL;
 	}
 
 	/* request LDAPv3 */
-	rc = ldap_set_option(ldap, LDAP_OPT_PROTOCOL_VERSION, &cfg->version);
+	rc = ldap_set_option(ldap, LDAP_OPT_PROTOCOL_VERSION, &version3);
 	if (rc != LDAP_OPT_SUCCESS) {
 		syslog(LOG_ERR, "Unable to request LDAP protocol");
-		return FAIL;
+		return NULL;
 	}
 
+	binddn =      *(char *) cfg[CFG_LDAP_DN] ? cfg[CFG_LDAP_DN] : NULL;
+	cred.bv_val = *(char *) cfg[CFG_LDAP_PW] ? cfg[CFG_LDAP_PW] : NULL;
+	cred.bv_len = cred.bv_val ? strlen(cred.bv_val) : 0;
+
 	/* connect to LDAP server and bind */
-	rc = ldap_sasl_bind_s(ldap, binddn, LDAP_SASL_SIMPLE, &cfg->cred,
+	rc = ldap_sasl_bind_s(ldap, cfg->binddn, LDAP_SASL_SIMPLE, &cfg->cred,
 			NULL, NULL, NULL);
-	if (rc != LDAP_SUCCESS) {
+	if (rc == LDAP_SUCCESS) {
+		return ldap;
+	} else {
 		syslog(LOG_ERR, "Unable to bind to LDAP: %s", ldap_err2string(rc));
-		return FAIL;
+		return NULL;
 	}
 }
 
 int main(int argc, const char *argv[]) {
-	config cfg;
-	char *username;
+	char *username, keys[];
+	LDAP *ldap;
+	int result = RESULT_FAIL, n, i;
 
 	openlog(NULL, 0, LOG_AUTH);
 
@@ -49,14 +85,22 @@ int main(int argc, const char *argv[]) {
 		username = ldap_escape_filter(argv[1]);
 	} else {
 		syslog(LOG_CRIT, "Expected 1 argument, got %i", argc);
-		return FAIL;
+		return RESULT_FAIL;
 	}
 
-	cfg.binddn = NULL;
-	cfg.cred.bv_val = NULL;
-	cfg.cred.bv_len = 0;
-	cfg.version = LDAP_VERSION3;
+	if (!read_config()) goto end;
+
+	n = get_pub_keys(username, &keys);
+	if (n == -1) {
+		goto end;
+	} else {
+		for (i = 0; i < n; i++) {
+			puts(keys[i]);
+		}
+		result = n ? RESULT_SUCCESS : RESULT_NONE;
+	}
 
 end:
 	free(username);
+	return result;
 }
