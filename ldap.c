@@ -1,5 +1,9 @@
+#define _GNU_SOURCE
+#include <stdio.h>
 #include <ldap.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "getauthorizedkey.h"
 
@@ -8,14 +12,20 @@ static inline LDAP *ldap_connect();
 
 extern char *cfg[];
 
-int get_pub_keys(const char *raw_username, char **keys) {
+int get_pub_keys(const char *raw_username, char **pub_keys) {
 	LDAP *ldap;
 	LDAPMessage *res = NULL;
-	char *username = NULL, *filter = NULL;
-	int rc, i, scope, result;
+	LDAPMessage first = NULL;
+	char *username = NULL, *filter = NULL, **values;
+	int rc, n, i, scope, result;
+	char *attrs[] = {
+		cfg[CFG_USR_ATTR],
+		NULL
+	};
 
 	if (!read_config()) return -1;
 
+	/* escape & interpolate the username */
 	username = ldap_escape_filter(raw_username);
 	if (!username) {
 		syslog(LOG_CRIT, "Unable to read config");
@@ -29,14 +39,36 @@ int get_pub_keys(const char *raw_username, char **keys) {
 		goto end;
 	}
 
+	/* connect & bind to LDAP server */
 	ldap = ldap_connect();
 	if (!ldap) return -1;
 
-	rc = ldap_search_ext_s(ldap, base, scope, filter, attrs,
-			1, NULL, NULL, NULL, LDAP_NO_LIMIT, &res);
+	/* run the search */
+	rc = ldap_search_ext_s(ldap, cfg[CFG_USR_BASE], scope, filter, attrs,
+			0, NULL, NULL, NULL, LDAP_NO_LIMIT, &res);
 	if (rc != LDAP_SUCCESS) {
 		syslog(LOG_ERR, "Search '%s' failed: %s", filter, ldap_err2string(rc));
 		goto end;
+	}
+
+	n = ldap_count_entries(ldap, res);
+	switch (n) {
+		case -1:
+		case 0:
+			syslog(LOG_ERR, "Search '%s' found no entries", filter);
+			goto end;
+		case 1:
+			first = ldap_first_entry(ldap, res);
+			values = ldap_get_values(ldap, first, cfg[CFG_USR_ATTR]);
+			result = ldap_count_values(values);
+			pub_keys = (char **) malloc(result * sizeof(char *));
+			for (i = 0; i < result; i++) {
+				pub_keys[i] = strdup(values[i]);
+			}
+			ldap_value_free(values);
+			break;
+		default:
+			syslog(LOG_WARN, "Search '%s' found %i entries, assuming failure", filter, n);
 	}
 
 end:
@@ -97,7 +129,7 @@ static inline LDAP *ldap_connect() {
 	cred.bv_len = cred.bv_val ? strlen(cred.bv_val) : 0;
 
 	/* connect to LDAP server and bind */
-	rc = ldap_sasl_bind_s(ldap, cfg->binddn, LDAP_SASL_SIMPLE, &cfg->cred,
+	rc = ldap_sasl_bind_s(ldap, binddn, LDAP_SASL_SIMPLE, &cred,
 			NULL, NULL, NULL);
 	if (rc == LDAP_SUCCESS) {
 		return ldap;

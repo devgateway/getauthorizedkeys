@@ -22,6 +22,7 @@ int main(int argc, const char *argv[]) {
 	} else {
 		for (i = 0; i < n; i++) {
 			puts(keys[i]);
+			free(keys[i]);
 		}
 		result = n ? RESULT_SUCCESS : RESULT_NONE;
 	}
