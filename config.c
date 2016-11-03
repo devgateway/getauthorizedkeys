@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "inih/ini.h"
 #include "getauthorizedkey.h"
 
@@ -45,7 +47,7 @@ int read_config() {
 		goto end;
 	}
 
-	if (!cfg[CFG_USR_ATTR]) cfg[CFG_USR_ATTR] = "sshPublicKey"
+	if (!cfg[CFG_USR_ATTR]) cfg[CFG_USR_ATTR] = "sshPublicKey";
 
 	/* check for unset settings */
 	for (i = 0; i < cfg_size; i++) {

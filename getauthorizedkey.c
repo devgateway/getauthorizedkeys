@@ -1,16 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <ldap.h>
-#include <syslog.h>
-#include <errno.h>
 
 #include "getauthorizedkey.h"
 
-extern char *cfg[];
-
 int main(int argc, const char *argv[]) {
-	char *username, keys[];
-	LDAP *ldap;
+	char *username, **keys;
 	int result = RESULT_FAIL, n, i;
 
 	openlog(NULL, 0, LOG_AUTH);
@@ -22,9 +16,7 @@ int main(int argc, const char *argv[]) {
 		return RESULT_FAIL;
 	}
 
-	if (!read_config()) goto end;
-
-	n = get_pub_keys(username, &keys);
+	n = get_pub_keys(username, keys);
 	if (n == -1) {
 		goto end;
 	} else {

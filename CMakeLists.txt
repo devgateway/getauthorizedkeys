@@ -10,7 +10,8 @@ add_library(inih STATIC inih/ini.c)
 target_compile_definitions(inih PRIVATE INI_MAX_LINE=512)
 set_target_properties(inih PROPERTIES POSITION_INDEPENDENT_CODE true)
 
-add_executable(getauthorizedkey getauthorizedkey.c config.c)
+file(GLOB sources *.c)
+add_executable(getauthorizedkey ${sources})
 target_link_libraries(getauthorizedkey ldap ldapescape inih)
 
 install(TARGETS getauthorizedkey

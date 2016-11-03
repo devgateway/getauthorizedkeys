@@ -1,11 +1,20 @@
+#include <ldap.h>
+#include <errno.h>
+
+#include "getauthorizedkey.h"
+
 static inline int get_scope(const char *scope_str);
 static inline LDAP *ldap_connect();
+
+extern char *cfg[];
 
 int get_pub_keys(const char *raw_username, char **keys) {
 	LDAP *ldap;
 	LDAPMessage *res = NULL;
 	char *username = NULL, *filter = NULL;
-	int rc, i, scope;
+	int rc, i, scope, result;
+
+	if (!read_config()) return -1;
 
 	username = ldap_escape_filter(raw_username);
 	if (!username) {
