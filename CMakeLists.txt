@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(getauthorizedkey C)
 
-set(SBINDIR /usr/sbin CACHE PATH "Privileged user binary path")
+set(LIBEXEC /usr/libexec CACHE PATH "Helper executable path")
 
 add_subdirectory(ldapescape)
 
@@ -15,4 +15,4 @@ add_executable(getauthorizedkey ${sources})
 target_link_libraries(getauthorizedkey ldap ldapescape inih)
 
 install(TARGETS getauthorizedkey
-	RUNTIME DESTINATION "${SBINDIR}")
+	RUNTIME DESTINATION "${LIBEXEC}")
