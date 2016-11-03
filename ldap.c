@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 
 #include "getauthorizedkey.h"
 
@@ -15,8 +16,9 @@ extern char *cfg[];
 int get_pub_keys(const char *raw_username, char **pub_keys) {
 	LDAP *ldap;
 	LDAPMessage *res = NULL;
-	LDAPMessage first = NULL;
-	char *username = NULL, *filter = NULL, **values;
+	LDAPMessage *first = NULL;
+	char *username = NULL, *filter = NULL;
+	struct berval **values;
 	int rc, n, i, scope, result;
 	char *attrs[] = {
 		cfg[CFG_USR_ATTR],
@@ -59,16 +61,17 @@ int get_pub_keys(const char *raw_username, char **pub_keys) {
 			goto end;
 		case 1:
 			first = ldap_first_entry(ldap, res);
-			values = ldap_get_values(ldap, first, cfg[CFG_USR_ATTR]);
-			result = ldap_count_values(values);
+			values = ldap_get_values_len(ldap, first, cfg[CFG_USR_ATTR]);
+			result = ldap_count_values_len(values);
 			pub_keys = (char **) malloc(result * sizeof(char *));
 			for (i = 0; i < result; i++) {
-				pub_keys[i] = strdup(values[i]);
+				pub_keys[i] = strndup(values[i]->bv_val, values[i]->bv_len);
 			}
-			ldap_value_free(values);
+			ldap_value_free_len(values);
 			break;
 		default:
-			syslog(LOG_WARN, "Search '%s' found %i entries, assuming failure", filter, n);
+			syslog(LOG_WARNING, "Search '%s' found %i entries, assuming failure",
+					filter, n);
 	}
 
 end:
