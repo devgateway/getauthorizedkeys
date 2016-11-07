@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "inih/ini.h"
-#include "getauthorizedkey.h"
+#include "getauthorizedkeys.h"
 
 typedef struct {
 	const char *section;

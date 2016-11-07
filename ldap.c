@@ -6,7 +6,7 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "getauthorizedkey.h"
+#include "getauthorizedkeys.h"
 
 static inline int get_scope(const char *scope_str);
 static inline LDAP *ldap_connect();

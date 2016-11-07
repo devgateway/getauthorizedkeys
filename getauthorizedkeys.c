@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "getauthorizedkey.h"
+#include "getauthorizedkeys.h"
 
 int main(int argc, const char *argv[]) {
 	char *username, **keys;

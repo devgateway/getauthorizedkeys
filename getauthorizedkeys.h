@@ -5,7 +5,7 @@
 #define RESULT_NONE 2
 
 #ifndef CONFIG_FILE
-#define CONFIG_FILE "/etc/getauthorizedkey.ini"
+#define CONFIG_FILE "/etc/getauthorizedkeys.ini"
 #endif
 
 typedef enum {
