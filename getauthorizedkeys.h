@@ -20,6 +20,5 @@ typedef enum {
 
 extern char *ldap_escape_filter(const char *string);
 
-int get_pub_key(const char *username, char **keys);
 int read_config();
-int get_pub_keys(const char *raw_username, char **keys);
+int get_pub_keys(const char *raw_username, char ***keys);

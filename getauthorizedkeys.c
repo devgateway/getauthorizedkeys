@@ -16,7 +16,7 @@ int main(int argc, const char *argv[]) {
 		return RESULT_FAIL;
 	}
 
-	n = get_pub_keys(username, keys);
+	n = get_pub_keys(username, &keys);
 	if (n == -1) {
 		goto end;
 	} else {

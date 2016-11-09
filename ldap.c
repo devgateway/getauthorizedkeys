@@ -13,7 +13,7 @@ static inline LDAP *ldap_connect();
 
 extern char *cfg[];
 
-int get_pub_keys(const char *raw_username, char **pub_keys) {
+int get_pub_keys(const char *raw_username, char ***pub_keys) {
 	LDAP *ldap;
 	LDAPMessage *res = NULL;
 	LDAPMessage *first = NULL;
@@ -66,9 +66,9 @@ int get_pub_keys(const char *raw_username, char **pub_keys) {
 			first = ldap_first_entry(ldap, res);
 			values = ldap_get_values_len(ldap, first, cfg[CFG_USR_ATTR]);
 			result = ldap_count_values_len(values);
-			pub_keys = (char **) malloc(result * sizeof(char *));
+			pub_keys = (char ***) malloc(result * sizeof(char **));
 			for (i = 0; i < result; i++) {
-				pub_keys[i] = strndup(values[i]->bv_val, values[i]->bv_len);
+				(*pub_keys)[i] = strndup(values[i]->bv_val, values[i]->bv_len);
 			}
 			ldap_value_free_len(values);
 			break;
