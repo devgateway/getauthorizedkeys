@@ -41,6 +41,8 @@ int get_pub_keys(const char *raw_username, char **pub_keys) {
 		goto end;
 	}
 
+	scope = get_scope(cfg[CFG_USR_SCOPE]);
+
 	/* connect & bind to LDAP server */
 	ldap = ldap_connect();
 	if (!ldap) return -1;
