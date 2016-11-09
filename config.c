@@ -51,10 +51,14 @@ int read_config() {
 
 	/* check for unset settings */
 	for (i = 0; i < cfg_size; i++) {
+		/* LDAP settings are optional: bind can be anonymous,
+		 * URI can be taken from library global defaults */
+		if ( !strcmp(cfg_lines[i].section, "ldap") ) continue;
+
 		if ( !cfg[cfg_lines[i].index] ) {
 			syslog(LOG_CRIT, CONFIG_FILE ": missing setting '%s' "
 					"in section '%s'", cfg_lines[i].name, cfg_lines[i].section);
-			return 1;
+			return 0;
 		}
 	}
 
