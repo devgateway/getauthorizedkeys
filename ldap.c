@@ -127,8 +127,16 @@ static inline LDAP *ldap_connect() {
 		return NULL;
 	}
 
-	binddn =      *(char *) cfg[CFG_LDAP_DN] ? cfg[CFG_LDAP_DN] : NULL;
-	cred.bv_val = *(char *) cfg[CFG_LDAP_PW] ? cfg[CFG_LDAP_PW] : NULL;
+	if (cfg[CFG_LDAP_DN]) {
+		binddn = cfg[CFG_LDAP_DN][0] ? cfg[CFG_LDAP_DN] : NULL;
+	} else {
+		binddn = NULL;
+	}
+	if (cfg[CFG_LDAP_PW]) {
+		cred.bv_val = cfg[CFG_LDAP_PW][0] ? cfg[CFG_LDAP_PW] : NULL;
+	} else {
+		cred.bv_val = NULL;
+	}
 	cred.bv_len = cred.bv_val ? strlen(cred.bv_val) : 0;
 
 	/* connect to LDAP server and bind */
