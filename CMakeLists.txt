@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8.11)
 project(getauthorizedkeys C)
 
 set(LIBEXEC /usr/libexec CACHE PATH "Helper executable path")
+set(CONFIGFILE /etc/getauthorizedkeys.ini CACHE FILE "Configuration file")
 
 add_subdirectory(ldapescape)
 
@@ -12,6 +13,7 @@ set_target_properties(inih PROPERTIES POSITION_INDEPENDENT_CODE true)
 
 file(GLOB sources *.c)
 add_executable(getauthorizedkeys ${sources})
+target_compile_definitions(getauthorizedkeys PRIVATE CONFIG_FILE="${CONFIGFILE}")
 target_link_libraries(getauthorizedkeys ldap ldapescape inih)
 
 install(TARGETS getauthorizedkeys
