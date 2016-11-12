@@ -1,7 +1,7 @@
 # Copyright 2016 Development Gateway, Inc
 # This file is part of pam_param, see COPYING
 %define esc_sha  ed4d4e107cc2279858818005b684f4f1b17e86d6
-%define inih_sha 5dbf5cb6b4027d5937726b8c499bd93c5b7d935d
+%define inih_sha 18a67c516358e2791ab720a1abe411d991774f3e
 
 Name:           getauthorizedkeys
 Version:        0.1
@@ -39,6 +39,7 @@ install -m 0660 getauthorizedkeys.ini %buildroot%_sysconfdir/
 
 %files
 %{_moduledir}/*
+%_mandir/man*/*
 %config %attr(0660,-,-) %_sysconfdir/getauthorizedkeys.ini
 %doc COPYING
 
