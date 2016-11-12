@@ -1,0 +1,57 @@
+.TH getauthorizedkeys.ini 5 "11/11/2016" "" "File Formats Manual"
+.SH NAME
+getauthorizedkeys.ini \- \fBgetauthorizedkeys\fR(1) configuration file
+.SH SYNOPSIS
+/etc/getauthorizedkeys.ini
+.SH DESCRIPTION
+This file provides options to the lookup utility, such as LDAP connection
+settings and search parameters. It uses the standard INI format with
+[\fIsections\fR] and \fIkey\fR = \fIvalue\fR pairs.
+.SH SECTIONS
+.SS ldap
+.sp
+Options controlling server connection.
+.PP
+uri
+.RS 4
+Optional. The URI of the LDAP server, possibly including port specification.
+Can be a comma-separated list of URIs. Defaults to the value set by LDAP
+library, see \fBldap.conf\fR(5).
+.RE
+.PP
+binddn, bindpw
+.RS 4
+Optional. Distinguished name and password to bind with. If omitted,
+anonymous bind is used.
+.RE
+.SS user
+.sp
+User search parameters.
+.PP
+base
+.RS 4
+Base object for the search.
+.RE
+.PP
+scope
+.RS 4
+Search scope: \fBbase\fR, \fBone\fR, or \fBsub\fR.
+.RE
+.PP
+filter
+.RS 4
+LDAP filter, where \fB%s\fR will be replaced with escaped username.
+.RE
+.PP
+attr
+.RS 4
+Optional. The attribute containing public key. Defaults to
+\fBsshPublicKey\fR.
+.RE
+.SH FILES
+/etc/getauthorizedkeys.ini
+.SH "SEE ALSO"
+.PP
+\fBgetauthorizedkeys\fR(1),
+\fBsshd_config\fR(5),
+\fBldap.conf\fR(5)
