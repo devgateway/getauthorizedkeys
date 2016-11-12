@@ -6,7 +6,8 @@ getauthorizedkeys \- helper binary to look up SSH public keys in LDAP
 .SH DESCRIPTION
 This helper utility looks up the user's SSH public keys in LDAP, and prints
 them to stdout. It's designed for use with \fBAuthorizedKeysCommand\fR
-option of \fBsshd\fR(8).
+option of \fBsshd\fR(8). This utility uses \fBLOG_AUTH\fR facility to write
+to \fBsyslog\fR(3).
 .SH EXIT STATUS
 The program returns 0 on successful retrieval, 1 on error, and 2 if no
 error occured, but no keys have been found.

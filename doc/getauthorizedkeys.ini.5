@@ -48,6 +48,10 @@ attr
 Optional. The attribute containing public key. Defaults to
 \fBsshPublicKey\fR.
 .RE
+.SH SECURITY
+If you store the password in this file, adjust its mode and ownership
+according to your \fBAuthorizedKeysCommandUser\fR setting in \fBsshd\fR
+(\fBAuthorizedKeysCommandRunAs\fR in older versions).
 .SH FILES
 /etc/getauthorizedkeys.ini
 .SH "SEE ALSO"
