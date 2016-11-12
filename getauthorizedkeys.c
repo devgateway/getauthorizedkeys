@@ -24,7 +24,7 @@ int main(int argc, const char *argv[]) {
 			puts(keys[i]);
 			free(keys[i]);
 		}
-		free(keys);
+		if (keys) free(keys);
 		result = n ? RESULT_SUCCESS : RESULT_NONE;
 	}
 

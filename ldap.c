@@ -60,6 +60,7 @@ int get_pub_keys(const char *raw_username, char ***pub_keys) {
 		case -1:
 		case 0:
 			result = 0;
+			*pub_keys = NULL;
 			syslog(LOG_ERR, "Search '%s' found no entries", filter);
 			goto end;
 		case 1:
