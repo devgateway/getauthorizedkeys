@@ -1,0 +1,21 @@
+.TH getauthorizedkeys 1 "11/11/2016" "GetAuthorizedKeys" "GetAuthorizedKeys"
+.SH NAME
+getauthorizedkeys \- helper binary to look up SSH public keys in LDAP
+.SH SYNOPSIS
+\fBgetauthorizedkeys\fR \fIUSERNAME\fR
+.SH DESCRIPTION
+This helper utility looks up the user's SSH public keys in LDAP, and prints
+them to stdout. It's designed for use with \fBAuthorizedKeysCommand\fR
+option of \fBsshd\fR(8).
+.SH EXIT STATUS
+The program returns 0 on successful retrieval, 1 on error, and 2 if no
+error occured, but no keys have been found.
+.SH FILES
+.PP
+/etc/getauthorizedkeys.ini
+.RS 4
+Configuration file, see \fBgetauthorizedkeys\fR(5).
+.SH "SEE ALSO"
+.PP
+\fBgetauthorizedkeys\fR(5),
+\fBsshd_config\fR(5)
