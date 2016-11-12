@@ -1,9 +1,5 @@
 #include <syslog.h>
 
-#define RESULT_SUCCESS 0
-#define RESULT_FAIL 1
-#define RESULT_NONE 2
-
 #ifndef CONFIG_FILE
 #define CONFIG_FILE "/etc/getauthorizedkeys.ini"
 #endif

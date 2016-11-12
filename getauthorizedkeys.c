@@ -3,6 +3,10 @@
 
 #include "getauthorizedkeys.h"
 
+#define RESULT_SUCCESS 0
+#define RESULT_FAIL 1
+#define RESULT_NONE 2
+
 int main(int argc, const char *argv[]) {
 	char *username, **keys;
 	int result = RESULT_FAIL, n, i;
