@@ -38,7 +38,7 @@ mkdir -p %buildroot%_sysconfdir
 install -m 0660 getauthorizedkeys.ini %buildroot%_sysconfdir/
 
 %files
-%{_moduledir}/*
+%_libexecdir/*
 %_mandir/man*/*
 %config %attr(0660,-,-) %_sysconfdir/getauthorizedkeys.ini
 %doc COPYING
