@@ -13,6 +13,13 @@ static inline LDAP *ldap_connect();
 
 extern char *cfg[];
 
+/* Receive public keys from LDAP into an array.
+Args:
+	raw_username - the username before escaping
+	pub_keys - will point to an array of pubkey strings, must be freed by the caller;
+		if no keys are found, set to NULL
+Returns:
+	Number of keys received */
 int get_pub_keys(const char *raw_username, char ***pub_keys) {
 	LDAP *ldap;
 	LDAPMessage *res = NULL;

@@ -13,6 +13,7 @@ int main(int argc, const char *argv[]) {
 
 	openlog(NULL, 0, LOG_AUTH);
 
+	/* get the argument */
 	if (argc == 2) {
 		username = ldap_escape_filter(argv[1]);
 	} else {
@@ -20,6 +21,7 @@ int main(int argc, const char *argv[]) {
 		return RESULT_FAIL;
 	}
 
+	/* receive and print the keys */
 	n = get_pub_keys(username, &keys);
 	if (n == -1) {
 		goto end;
