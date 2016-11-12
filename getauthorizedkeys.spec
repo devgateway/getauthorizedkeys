@@ -28,6 +28,7 @@ option of sshd.
 cmake \
 	-DCONFIGFILE:FILE=%{_sysconfdir}/getauthorizedkeys.ini \
 	-DLIBEXEC=%_libexecdir \
+	-DMANDIR=%_mandir \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	.
 make
