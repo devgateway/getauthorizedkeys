@@ -37,7 +37,7 @@ int get_pub_keys(const char *raw_username, char ***pub_keys) {
 	/* escape & interpolate the username */
 	username = ldap_escape_filter(raw_username);
 	if (!username) {
-		syslog(LOG_CRIT, "Unable to read config");
+		syslog(LOG_CRIT, "Unable to escape: %s", raw_username);
 		return -1;
 	}
 
