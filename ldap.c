@@ -81,6 +81,7 @@ end:
 	free(username);
 	if (filter) free(filter);
 	if (res) ldap_msgfree(res);
+	ldap_unbind_ext_s(ldap, NULL, NULL);
 	return result;
 }
 
