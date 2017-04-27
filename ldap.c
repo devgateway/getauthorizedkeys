@@ -1,3 +1,5 @@
+/* Copyright 2016-2017 Development Gateway, Inc
+ * This file is part of getauthorizedkeys, see COPYING */
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <ldap.h>

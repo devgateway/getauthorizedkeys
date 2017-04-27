@@ -1,4 +1,4 @@
-# Copyright 2016 Development Gateway, Inc
+# Copyright 2016-2017 Development Gateway, Inc
 cmake_minimum_required(VERSION 2.8.11)
 project(getauthorizedkeys C)
 
