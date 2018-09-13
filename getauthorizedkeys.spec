@@ -1,5 +1,5 @@
-# Copyright 2016-2017 Development Gateway, Inc
-# This file is part of pam_param, see COPYING
+# Copyright 2016-2018 Development Gateway, Inc
+# This file is part of getauthorizedkeys, see COPYING
 %define esc_sha  ed4d4e107cc2279858818005b684f4f1b17e86d6
 %define inih_sha f5609c8eae118fc3053c2fe3d02c023c8f0d176c
 
