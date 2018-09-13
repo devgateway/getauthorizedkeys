@@ -4,7 +4,7 @@
 %define inih_sha 0ee2bf26abccc63ee0a5a416ed9cdf4d113d8c25
 
 Name:           getauthorizedkeys
-Version:        0.2
+Version:        0.3
 Release:        %{rel}%{!?rel:1}
 License:        GPLv3
 Vendor:         Development Gateway

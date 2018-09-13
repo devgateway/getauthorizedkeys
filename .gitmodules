@@ -4,3 +4,6 @@
 [submodule "inih"]
 	path = inih
 	url = https://github.com/benhoyt/inih.git
+[submodule "debian"]
+	path = debian
+	url = git@github.com:devgateway/getauthorizedkeys-packaging.git
